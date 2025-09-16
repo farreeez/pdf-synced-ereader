@@ -47,6 +47,7 @@ class Toolbar {
   #colorPicker = null;
 
   #opts;
+  #requiresPagesLoaded;
 
   /**
    * @param {ToolbarOptions} options
@@ -58,6 +59,7 @@ class Toolbar {
    *    - 2 (touch) - The large toolbar size.
    */
   constructor(options, eventBus, toolbarDensity = 0) {
+    this.#requiresPagesLoaded = [];
     this.#opts = options;
     this.eventBus = eventBus;
     const buttons = [
@@ -143,6 +145,11 @@ class Toolbar {
           },
         },
       },
+      {
+        element: options.getTextButton,
+        eventName: "getText",
+        requiresPagesLoaded: true,
+      },
     ];
 
     // Bind the event listeners for click and various other actions.
@@ -196,6 +203,7 @@ class Toolbar {
 
     // Reset the Editor buttons too, since they're document specific.
     this.#editorModeChanged({ mode: AnnotationEditorType.DISABLE });
+    this.#setPagesLoaded(false);
   }
 
   #bindListeners(buttons) {
@@ -209,7 +217,13 @@ class Toolbar {
     const self = this;
 
     // The buttons within the toolbar.
-    for (const { element, eventName, eventDetails, telemetry } of buttons) {
+    for (const {
+      element,
+      eventName,
+      eventDetails,
+      telemetry,
+      requiresPagesLoaded,
+    } of buttons) {
       element.addEventListener("click", evt => {
         if (eventName !== null) {
           eventBus.dispatch(eventName, {
@@ -226,6 +240,10 @@ class Toolbar {
           });
         }
       });
+
+      if (requiresPagesLoaded) {
+        this.#requiresPagesLoaded.push(element);
+      }
     }
     // The non-button elements within the toolbar.
     pageNumber.addEventListener("click", function () {
@@ -262,10 +280,19 @@ class Toolbar {
     // Suppress context menus for some controls.
     scaleSelect.oncontextmenu = noContextMenu;
 
+    this.eventBus._on("pagesloaded", evt => {
+      const isPagesLoaded = !!evt.pagesCount;
+
+      if (isPagesLoaded) {
+        this.#setPagesLoaded(isPagesLoaded);
+      }
+    });
+
     eventBus._on(
       "annotationeditormodechanged",
       this.#editorModeChanged.bind(this)
     );
+
     eventBus._on("showannotationeditorui", ({ mode }) => {
       switch (mode) {
         case AnnotationEditorType.HIGHLIGHT:
@@ -285,6 +312,12 @@ class Toolbar {
       eventBus._on("mainhighlightcolorpickerupdatecolor", ({ value }) => {
         this.#colorPicker?.updateColor(value);
       });
+    }
+  }
+
+  #setPagesLoaded(isLoaded) {
+    for (const element of this.#requiresPagesLoaded) {
+      element.disabled = !isLoaded;
     }
   }
 

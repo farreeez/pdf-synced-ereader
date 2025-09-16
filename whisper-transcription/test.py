@@ -37,24 +37,21 @@ print(chunkFiles)
 
 model = whisper.load_model("base")
 currTime = 0.0
+currChunk = 0
 
 for chunk in chunkFiles:
     print(f"RUNNING MODEL {chunkFolder}/{chunk}")
     result = model.transcribe(f"{chunkFolder}/{chunk}")
+    currChunk += 1
     
-    if(currTime == 0.0):
-        with open("jsonDump.txt", "w", encoding="utf-8") as f:
-            f.write(json.dumps(result["segments"], indent=4))
-        
-        currTime = result["segments"][-1]
-        print("hello")
-        break
-
-
-
-
-
-
+    if(currTime != 0.0):
+        for segment in result["segments"]:
+            segment["start"] += currTime
+            segment["end"] += currTime
+    
+    currTime = result["segments"][-1]["end"]
+    with open(f"{audioDirectory}/transcriptJson/jsonDump{currChunk:02}.txt", "w", encoding="utf-8") as f:
+        f.write(json.dumps(result["segments"], indent=4))
 
 # result = model.transcribe(book)
 # with open("transcript.txt", "w", encoding="utf-8") as f:

@@ -31,6 +31,19 @@ import {
   setLayerDimensions,
   shadow,
 } from "pdfjs-lib";
+import { GenericL10n } from "web-null_l10n";
+import { AnnotationEditorLayerBuilder } from "./annotation_editor_layer_builder.js";
+import { AnnotationLayerBuilder } from "./annotation_layer_builder.js";
+import { AppOptions } from "./app_options.js";
+import { Autolinker } from "./autolinker.js";
+import { BasePDFPageView } from "./base_pdf_page_view.js";
+import { DrawLayerBuilder } from "./draw_layer_builder.js";
+import { SimpleLinkService } from "./pdf_link_service.js";
+import { PDFPageDetailView } from "./pdf_page_detail_view.js";
+import { StructTreeLayerBuilder } from "./struct_tree_layer_builder.js";
+import { TextAccessibilityManager } from "./text_accessibility.js";
+import { TextHighlighter } from "./text_highlighter.js";
+import { TextLayerBuilder } from "./text_layer_builder.js";
 import {
   approximateFraction,
   calcRound,
@@ -39,19 +52,6 @@ import {
   RenderingStates,
   TextLayerMode,
 } from "./ui_utils.js";
-import { AnnotationEditorLayerBuilder } from "./annotation_editor_layer_builder.js";
-import { AnnotationLayerBuilder } from "./annotation_layer_builder.js";
-import { AppOptions } from "./app_options.js";
-import { Autolinker } from "./autolinker.js";
-import { BasePDFPageView } from "./base_pdf_page_view.js";
-import { DrawLayerBuilder } from "./draw_layer_builder.js";
-import { GenericL10n } from "web-null_l10n";
-import { PDFPageDetailView } from "./pdf_page_detail_view.js";
-import { SimpleLinkService } from "./pdf_link_service.js";
-import { StructTreeLayerBuilder } from "./struct_tree_layer_builder.js";
-import { TextAccessibilityManager } from "./text_accessibility.js";
-import { TextHighlighter } from "./text_highlighter.js";
-import { TextLayerBuilder } from "./text_layer_builder.js";
 import { XfaLayerBuilder } from "./xfa_layer_builder.js";
 
 /**

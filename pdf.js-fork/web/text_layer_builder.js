@@ -112,6 +112,11 @@ class TextLayerBuilder {
     await this.#textLayer.render();
     this.#renderingDone = true;
 
+    // appending ids to each span to be able to identify them.
+    const pdfPageNum = this.pdfPage._pageIndex;
+
+    console.log(pdfPageNum);
+
     const endOfContent = document.createElement("div");
     endOfContent.className = "endOfContent";
     this.div.append(endOfContent);

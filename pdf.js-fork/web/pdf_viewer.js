@@ -39,6 +39,10 @@ import {
   stopEvent,
   version,
 } from "pdfjs-lib";
+import { GenericL10n } from "web-null_l10n";
+import { SimpleLinkService } from "./pdf_link_service.js";
+import { PDFPageView } from "./pdf_page_view.js";
+import { PDFRenderingQueue } from "./pdf_rendering_queue.js";
 import {
   DEFAULT_SCALE,
   DEFAULT_SCALE_DELTA,
@@ -64,10 +68,6 @@ import {
   VERTICAL_PADDING,
   watchScroll,
 } from "./ui_utils.js";
-import { GenericL10n } from "web-null_l10n";
-import { PDFPageView } from "./pdf_page_view.js";
-import { PDFRenderingQueue } from "./pdf_rendering_queue.js";
-import { SimpleLinkService } from "./pdf_link_service.js";
 
 const DEFAULT_CACHE_SIZE = 10;
 

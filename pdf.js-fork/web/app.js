@@ -20,6 +20,62 @@
 /** @typedef {import("../src/display/api.js").PDFDocumentLoadingTask} PDFDocumentLoadingTask */
 
 import {
+  AnnotationEditorType,
+  build,
+  FeatureTest,
+  getDocument,
+  getFilenameFromUrl,
+  getPdfFilenameFromUrl,
+  GlobalWorkerOptions,
+  InvalidPDFException,
+  isDataScheme,
+  isPdfFile,
+  OutputScale,
+  PDFWorker,
+  ResponseException,
+  shadow,
+  stopEvent,
+  TouchManager,
+  updateUrlHash,
+  version,
+} from "pdfjs-lib";
+import { AltTextManager } from "web-alt_text_manager";
+import { AnnotationEditorParams } from "web-annotation_editor_params";
+import { DownloadManager } from "web-download_manager";
+import { ExternalServices, initCom, MLManager } from "web-external_services";
+import {
+  ImageAltTextSettings,
+  NewAltTextManager,
+} from "web-new_alt_text_manager";
+import { PDFAttachmentViewer } from "web-pdf_attachment_viewer";
+import { PDFCursorTools } from "web-pdf_cursor_tools";
+import { PDFDocumentProperties } from "web-pdf_document_properties";
+import { PDFFindBar } from "web-pdf_find_bar";
+import { PDFLayerViewer } from "web-pdf_layer_viewer";
+import { PDFOutlineViewer } from "web-pdf_outline_viewer";
+import { PDFPresentationMode } from "web-pdf_presentation_mode";
+import { PDFSidebar } from "web-pdf_sidebar";
+import { PDFThumbnailViewer } from "web-pdf_thumbnail_viewer";
+import { Preferences } from "web-preferences";
+import { PDFPrintServiceFactory } from "web-print_service";
+import { SecondaryToolbar } from "web-secondary_toolbar";
+import { SignatureManager } from "web-signature_manager";
+import { Toolbar } from "web-toolbar";
+import { AppOptions, OptionKind } from "./app_options.js";
+import { CaretBrowsingMode } from "./caret_browsing.js";
+import { CommentManager } from "./comment_manager.js";
+import { EditorUndoBar } from "./editor_undo_bar.js";
+import { EventBus, FirefoxEventBus } from "./event_utils.js";
+import { OverlayManager } from "./overlay_manager.js";
+import { PasswordPrompt } from "./password_prompt.js";
+import { HighlightingText } from "./pdf-syncing-components/highlightingText.js";
+import { PDFFindController } from "./pdf_find_controller.js";
+import { PDFHistory } from "./pdf_history.js";
+import { LinkTarget, PDFLinkService } from "./pdf_link_service.js";
+import { PDFRenderingQueue } from "./pdf_rendering_queue.js";
+import { PDFScriptingManager } from "./pdf_scripting_manager.js";
+import { PDFViewer } from "./pdf_viewer.js";
+import {
   animationStarted,
   apiPageLayoutToViewerModes,
   apiPageModeToSidebarView,
@@ -40,61 +96,6 @@ import {
   SpreadMode,
   TextLayerMode,
 } from "./ui_utils.js";
-import {
-  AnnotationEditorType,
-  build,
-  FeatureTest,
-  getDocument,
-  getFilenameFromUrl,
-  getPdfFilenameFromUrl,
-  GlobalWorkerOptions,
-  InvalidPDFException,
-  isDataScheme,
-  isPdfFile,
-  OutputScale,
-  PDFWorker,
-  ResponseException,
-  shadow,
-  stopEvent,
-  TouchManager,
-  updateUrlHash,
-  version,
-} from "pdfjs-lib";
-import { AppOptions, OptionKind } from "./app_options.js";
-import { EventBus, FirefoxEventBus } from "./event_utils.js";
-import { ExternalServices, initCom, MLManager } from "web-external_services";
-import {
-  ImageAltTextSettings,
-  NewAltTextManager,
-} from "web-new_alt_text_manager";
-import { LinkTarget, PDFLinkService } from "./pdf_link_service.js";
-import { AltTextManager } from "web-alt_text_manager";
-import { AnnotationEditorParams } from "web-annotation_editor_params";
-import { CaretBrowsingMode } from "./caret_browsing.js";
-import { CommentManager } from "./comment_manager.js";
-import { DownloadManager } from "web-download_manager";
-import { EditorUndoBar } from "./editor_undo_bar.js";
-import { OverlayManager } from "./overlay_manager.js";
-import { PasswordPrompt } from "./password_prompt.js";
-import { PDFAttachmentViewer } from "web-pdf_attachment_viewer";
-import { PDFCursorTools } from "web-pdf_cursor_tools";
-import { PDFDocumentProperties } from "web-pdf_document_properties";
-import { PDFFindBar } from "web-pdf_find_bar";
-import { PDFFindController } from "./pdf_find_controller.js";
-import { PDFHistory } from "./pdf_history.js";
-import { PDFLayerViewer } from "web-pdf_layer_viewer";
-import { PDFOutlineViewer } from "web-pdf_outline_viewer";
-import { PDFPresentationMode } from "web-pdf_presentation_mode";
-import { PDFPrintServiceFactory } from "web-print_service";
-import { PDFRenderingQueue } from "./pdf_rendering_queue.js";
-import { PDFScriptingManager } from "./pdf_scripting_manager.js";
-import { PDFSidebar } from "web-pdf_sidebar";
-import { PDFThumbnailViewer } from "web-pdf_thumbnail_viewer";
-import { PDFViewer } from "./pdf_viewer.js";
-import { Preferences } from "web-preferences";
-import { SecondaryToolbar } from "web-secondary_toolbar";
-import { SignatureManager } from "web-signature_manager";
-import { Toolbar } from "web-toolbar";
 import { ViewHistory } from "./view_history.js";
 
 const FORCE_PAGES_LOADED_TIMEOUT = 10000; // ms
@@ -153,6 +154,8 @@ const PDFViewerApplication = {
   preferences: new Preferences(),
   /** @type {Toolbar} */
   toolbar: null,
+  /** @type {HighlightingText} */
+  highlightingText: null,
   /** @type {SecondaryToolbar} */
   secondaryToolbar: null,
   /** @type {EventBus} */
@@ -674,6 +677,8 @@ const PDFViewerApplication = {
           AppOptions.get("toolbarDensity")
         );
       }
+
+      this.highlightingText = new HighlightingText(appConfig.toolbar, eventBus);
     }
 
     if (appConfig.secondaryToolbar) {
@@ -1159,6 +1164,7 @@ const PDFViewerApplication = {
     this.pdfHistory?.reset();
     this.findBar?.reset();
     this.toolbar?.reset();
+    this.highlightingText?.reset();
     this.secondaryToolbar?.reset();
     this._PDFBug?.cleanup();
 

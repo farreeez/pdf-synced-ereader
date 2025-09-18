@@ -766,7 +766,7 @@ class PDFViewer {
     ac.abort(); // Remove the "visibilitychange" listener immediately.
   }
 
-  async getAllText() {
+  async getAllText(separatedByPages = false) {
     const texts = [];
     const buffer = [];
     for (
@@ -791,6 +791,10 @@ class PDFViewer {
         }
       }
       texts.push(removeNullCharacters(buffer.join("")));
+    }
+
+    if (separatedByPages) {
+      return texts;
     }
 
     return texts.join("\n");

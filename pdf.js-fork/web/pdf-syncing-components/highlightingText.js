@@ -19,6 +19,8 @@ class HighlightingText {
         this.#texts = await PDFViewerApplication.pdfViewer.getAllText(true);
       }
 
+      PDFViewerApplication.pdfViewer.currentPageNumber = 300;
+
       console.log(this.#texts);
     });
   }

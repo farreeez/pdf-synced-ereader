@@ -10,8 +10,7 @@ Guidelines:
 - Make it easy to unit test these functions without needing an app context.
 """
 
-from .audio import load_audio_metadata
+# from .alignment import load_audio_metadata
 
-__all__ = [
-    "load_audio_metadata",
-]
+# __all__ = [
+# ]

@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "synced_ereader_api"
+version = "1.0.0"
+requires-python = ">=3.10,<4"  # Raised from >=3.8.1 for better support of whisper & tooling
+dependencies = [
+    "Flask>=3.0.2,<4",
+    # Audio transcription and model
+    "openai-whisper",
+    # Media playback / control
+    "python-vlc",
+    # Audio segment processing
+    "pydub",
+    # Keyboard/mouse input capture (may be used for syncing controls)
+    "pynput",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8,<9",
+    "flake8>=7,<8",
+    "black>=24.2.0,<25",
+    "isort>=5.13.1,<6",
+    "mypy>=1.8.0,<2",
+]
+
+[tool.setuptools.package-data]
+"*" = ["**/static/**/*", "**/templates/**/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+ignore_missing_imports = true
+files = "synced_ereader_api,tests"

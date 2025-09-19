@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "synced_ereader_api"
 version = "1.0.0"
-requires-python = ">=3.10,<4"  # Raised from >=3.8.1 for better support of whisper & tooling
+requires-python = ">=3.11,<4"  # Raised from >=3.10 to leverage improved perf & typing in 3.11
 dependencies = [
     "Flask>=3.0.2,<4",
     # Audio transcription and model

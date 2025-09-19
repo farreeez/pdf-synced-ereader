@@ -1,9 +1,0 @@
-CASE 1 (ONE AUDIO FILE THAT IS SHORT ENOUGH TO BE HELD IN MEMORY): 
-    Transcribe the entire file in memory.
-
-CASE 2 (ONE AUDIO FILE TOO LONG FOR MEMORY):
-    Check file length then separate the file into multiple files that are short enough to be held in memory.
-    Transcribe each file and add the result of the transcription into a json file containing all of the transcribed text.
-
-CASE 3 (MULTIPLE AUDIO FILES COULD BE TOO LONG COULD BE TOO SHROT):
-    Get a list of all current audio files in the folder. Figure out how to order their transcription then apply case 2 to each one.

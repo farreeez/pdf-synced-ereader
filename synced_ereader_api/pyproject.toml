@@ -16,6 +16,7 @@ dependencies = [
     "pydub",
     # Keyboard/mouse input capture (may be used for syncing controls)
     "pynput",
+    "python-dotenv",
 ]
 
 [project.optional-dependencies]

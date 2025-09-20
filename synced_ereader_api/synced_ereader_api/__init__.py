@@ -6,10 +6,12 @@ from flask import Flask
 # should use the structured blueprints under `synced_ereader_api.blueprints`.
 from synced_ereader_api.blueprints import api_bp
 from synced_ereader_api.logging import init_logging
+from dotenv import load_dotenv
 
 
 def create_app(config_overrides=None):
     init_logging()  # should be configured before any access to app.logger
+    load_dotenv()
 
     app = Flask(__name__)
     app.config.from_object("synced_ereader_api.defaults")

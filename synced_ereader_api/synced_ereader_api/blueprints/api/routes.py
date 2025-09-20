@@ -28,3 +28,23 @@ def createProject(project_name):
 @api_bp.get("/project-names")
 def getProjectNames():
     return jsonify({"project names": list_projects(Path(current_app.config["PROJECTS_DIRECTORY"]))}), 200
+
+# Expects a boolean value in the body that shows wether the expected audio book is in multiple files or in a single file.
+# If it is a single audio file then the URI provided should be the URI to the singular audio file if the boolean is true or to the directory
+# containing all of the audio files for the audiobooks if it is false 
+@api_bp.post("/transcribe-audiobook")
+def transcribeAudioBook():
+    data = request.get_json()
+
+    if not data:
+        return jsonify({"error": "No data was provided in the request body."}), 400
+
+    required_fields = ["URI", "is_single_audio_file"]
+
+    missing = [field for field in required_fields if field not in data]
+
+    if len(missing) > 0:
+        return jsonify({"error": "The following required fields are not in request body: " + ",".join(missing)}), 400
+    
+    return jsonify({"no problems with request body"}), 200
+

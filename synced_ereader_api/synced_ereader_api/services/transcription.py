@@ -29,7 +29,7 @@ def _validate_audio_path(path, is_single_file):
     if (not is_single_file)  and path.is_file():
         raise ValueError("is_single_file is set to false, but the path provided is for a file.")
 
-def transcribe_audio(request_data: json, project_name: str, base_dir: Path):
+def transcribe_audio(request_data: json, project_path:Path):
     try:
         _validate_transcription_data(request_data)
     except ValueError as e:
@@ -49,13 +49,7 @@ def transcribe_audio(request_data: json, project_name: str, base_dir: Path):
     else:
         files = sorted(f for f in audio_path.iterdir() if f.is_file())
     
-    print(files)
-    
 
-    project_path = (base_dir / project_name).resolve()
-
-    if not project_path.exists():
-        raise ValueError("Project name does not exist.")
     
     try:
         chunkFolder = project_path / "chunks"

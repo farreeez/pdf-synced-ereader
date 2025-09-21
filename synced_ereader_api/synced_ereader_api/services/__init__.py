@@ -11,5 +11,6 @@ Guidelines:
 """
 
 from .projects import create_project, list_projects
+from .transcription import transcribe_audio
 
-__all__ = ["create_project", "list_projects"]
+__all__ = ["create_project", "list_projects", "transcribe_audio"]

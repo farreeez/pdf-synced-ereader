@@ -39,12 +39,32 @@ def transcribeAudioBook():
     if not data:
         return jsonify({"error": "No data was provided in the request body."}), 400
 
-    required_fields = ["URI", "is_single_audio_file"]
+    required_fields = ["path", "is_single_audio_file"]
 
     missing = [field for field in required_fields if field not in data]
 
     if len(missing) > 0:
         return jsonify({"error": "The following required fields are not in request body: " + ",".join(missing)}), 400
+
+    # if is single audio is true check that URI is for a file otherwise check that it is for a directory.
+
+    isSingleFile = data["is_single_audio_file"]
+
+    if type(isSingleFile) is not bool:
+        return jsonify({"error": "The field is_single_audio_file must be a boolean."}), 400
     
-    return jsonify({"no problems with request body"}), 200
+    rawAudioPath = data["path"]
+
+    audioPath = Path(rawAudioPath)
+
+    if not (audioPath.is_absolute() and audioPath.exists()):
+        return jsonify({"error": "URI provided is invalid."}), 400
+
+    if isSingleFile and audioPath.is_dir():
+        return jsonify({"error": "is_single_file is set to true, but the path provided is for a folder."}), 400
+
+    if (not isSingleFile) and audioPath.is_file():
+        return jsonify({"error": "is_single_file is set to false, but the path provided is for a file."}), 400
+
+    return jsonify({"good":"no problems with request body"}), 200
 

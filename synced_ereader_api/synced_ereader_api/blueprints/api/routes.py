@@ -32,14 +32,15 @@ def getProjectNames():
 # Expects a boolean value in the body that shows wether the expected audio book is in multiple files or in a single file.
 # If it is a single audio file then the URI provided should be the URI to the singular audio file if the boolean is true or to the directory
 # containing all of the audio files for the audiobooks if it is false 
-@api_bp.post("/transcribe-audiobook")
-def transcribeAudioBook():
+@api_bp.post("/transcribe-audiobook/<project_name>")
+def transcribeAudioBook(project_name):
     data = request.get_json()
 
     try:
-        transcribe_audio(data)
+        transcribe_audio(data, project_name, Path(current_app.config["PROJECTS_DIRECTORY"]))
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"error with validation": str(e)}), 400
+    except Exception as e:
+        return jsonify({"error with transcription": str(e)}), 500
 
     return jsonify({"good":"no problems with request body"}), 200
-

@@ -2,6 +2,7 @@
 __pycache__/
 
 # Files created by this set up:
+synced_ereader_api/projects/*
 venv/
 build/
 

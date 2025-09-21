@@ -20,80 +20,87 @@ def _validate_audio_path(path, is_single_file):
     if type(is_single_file) is not bool:
         raise ValueError("The field is_single_audio_file must be a boolean.")
 
-    audioPath = Path(path)
-
-    if not (audioPath.is_absolute() and audioPath.exists()):
+    if not (path.is_absolute() and path.exists()):
         raise ValueError("path provided is invalid.")
 
-    if is_single_file and audioPath.is_dir():
+    if is_single_file and path.is_dir():
         raise ValueError("is_single_file is set to true, but the path provided is for a folder.")
 
-    if (not is_single_file)  and audioPath.is_file():
+    if (not is_single_file)  and path.is_file():
         raise ValueError("is_single_file is set to false, but the path provided is for a file.")
 
-def transcribe_audio(request_data):
+def transcribe_audio(request_data: json, project_name: str, base_dir: Path):
     try:
         _validate_transcription_data(request_data)
     except ValueError as e:
-        raise ValueError(str(e))
+        raise e
 
     is_single_file = request_data["is_single_audio_file"]
-    rawAudioPath = request_data["path"]
+    raw_audio_path = request_data["path"]
+    audio_path = Path(raw_audio_path)
 
     try:
-        _validate_audio_path(rawAudioPath, is_single_file)
+        _validate_audio_path(audio_path, is_single_file)
     except ValueError as e:
-        raise ValueError(str(e))
+        raise e
     
-# audioDirectory = "../books/Sam Walton, made in America my story - Sam Walton/audio/"
-
-# files = sorted(f for f in os.listdir(audioDirectory)
-#                if os.path.isfile(os.path.join(audioDirectory, f)))
-# print(files)
-
-# chunkFolder = Path(audioDirectory + "chunks")
-# chunkFolder.mkdir(parents=True, exist_ok=True)
-
-# for file in files:
-#     bookDir = audioDirectory + file
-#     audio = AudioSegment.from_file(bookDir)
-
-#     durSecs = len(audio) 
-
-#     segLength = 60 * 5 * 1000
-
-#     for i in range(0, len(audio), segLength):
-#         chunk = audio[i:i+segLength]
-
-#         chunkFolder = Path(audioDirectory + "chunks")
-#         chunkFolder.mkdir(parents=True, exist_ok=True)
-
-#         chunkNumber = int(i / segLength) + 1
-
-#         print(f"{chunkFolder}/{file} Chunk {chunkNumber:02}.mp3 CREATED")
-#         chunk.export(f"{chunkFolder}/{file} Chunk {chunkNumber:02}.mp3",format="mp3")
-
-# chunkFiles = sorted(os.listdir(chunkFolder))
-
-# print(chunkFiles)
-
-# model = whisper.load_model("base")
-# currTime = 0.0
-# currChunk = 0
-
-# for chunk in chunkFiles:
-#     print(f"RUNNING MODEL {chunkFolder}/{chunk}")
-#     result = model.transcribe(f"{chunkFolder}/{chunk}")
-#     currChunk += 1
+    if is_single_file:
+        files = [audio_path]
+    else:
+        files = sorted(f for f in audio_path.iterdir() if f.is_file())
     
-#     if(currTime != 0.0):
-#         for segment in result["segments"]:
-#             segment["start"] += currTime
-#             segment["end"] += currTime
+    print(files)
     
-#     currTime = result["segments"][-1]["end"]
-#     with open(f"{audioDirectory}/transcriptJson/jsonDump{currChunk:02}.txt", "w", encoding="utf-8") as f:
-#         f.write(json.dumps(result["segments"], indent=4))
+
+    project_path = (base_dir / project_name).resolve()
+
+    if not project_path.exists():
+        raise ValueError("Project name does not exist.")
+    
+    try:
+        chunkFolder = project_path / "chunks"
+        chunkFolder.mkdir(parents=True, exist_ok=True)
+
+        for file in files:
+            bookDir = file.absolute().__str__()
+            audio = AudioSegment.from_file(bookDir)
+
+            durSecs = len(audio) 
+
+            segLength = 60 * 5 * 1000
+
+            for i in range(0, len(audio), segLength):
+                chunk = audio[i:i+segLength]
+
+                chunkNumber = int(i / segLength) + 1
+
+                chunk.export(f"{chunkFolder}/{file.name} Chunk {chunkNumber:02}.mp3",format="mp3")
+
+        chunkFiles = sorted(f for f in Path(chunkFolder).iterdir() if f.is_file())
+        print(chunkFiles)
+
+        model = whisper.load_model("base")
+        currTime = 0.0
+        currChunk = 0
+
+        transcript_folder = chunkFolder / "transcriptJson"
+        transcript_folder.mkdir(parents=True, exist_ok=True)
+
+        for chunk in chunkFiles:
+            print(f"RUNNING MODEL {chunkFolder}/{chunk.name}")
+            result = model.transcribe(f"{chunkFolder}/{chunk.name}")
+            currChunk += 1
+            
+            if(currTime != 0.0):
+                for segment in result["segments"]:
+                    segment["start"] += currTime
+                    segment["end"] += currTime
+            
+            currTime = result["segments"][-1]["end"]
+            with open(f"{transcript_folder}/jsonDump{currChunk:02}.txt", "w", encoding="utf-8") as f:
+                f.write(json.dumps(result["segments"], indent=4))
+    except Exception as e:
+        raise e
 
 # with open("jsonDump.txt", "r", encoding="utf-8") as f:
 #     audioJson = json.load(f)

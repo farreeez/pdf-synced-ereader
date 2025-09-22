@@ -13,12 +13,12 @@ dependencies = [
     # Media playback / control
     "python-vlc",
     # Audio segment processing
-    "pydub",
-    # Keyboard/mouse input capture (may be used for syncing controls)
     "pynput",
     "python-dotenv",
     "scikit-learn",
     "flask-cors",
+    "pydub",
+    "audioop-lts",
 ]
 
 [project.optional-dependencies]

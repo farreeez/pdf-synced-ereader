@@ -40,7 +40,6 @@ $(VENV_DIR):
 	$(PY) -m venv $(VENV_DIR)
 	$(PIP) install --upgrade pip setuptools wheel
 	$(PIP) install -e .
-	REM PowerShell treats [] as wildcards, so keep quotes below:
 	$(PIP) install -e ".[dev]"
 
 # Alias so both `make venv` and directory existence work

@@ -1,3 +1,9 @@
+import {
+  createProjectApi,
+  getProjectNamesApi,
+  transcribeAudioBookApi,
+} from "./api/syncedEreaderApi.js";
+
 class HighlightingText {
   #opts;
   #eventBus;
@@ -23,21 +29,22 @@ class HighlightingText {
 
       console.log("Testing endpoints");
 
-      // const { createProject, data, isLoading, isError } = createProjectApi();
-      // const { getProjectNames } = getProjectNamesApi();
-      // const { transcribeAudioBook } = transcribeAudioBookApi();
+      const { createProject, data, isLoading, isError } = createProjectApi();
+      const { getProjectNames } = getProjectNamesApi();
+      const { transcribeAudioBook } = transcribeAudioBookApi();
 
       // const createdProjectName = await createProject("big-book");
-      // const existingProjectNames = await getProjectNames();
-      // const transcribedAudioOutput = await transcribeAudioBook(
-      //   "big-book",
-      //   true,
-      //   "C:\\Users\\xxfar\\OneDrive\\Desktop\\coding\\projects\\pdf-synced-ereader\\books\\Sam Walton, made in America my story - Sam Walton\\audio\\Sam Walton Made in America (Unabridged) - 01.m4b"
-      // );
+      const existingProjectNames = await getProjectNames();
+      // Call transcribe audiobook endpoint (projectName, isSingleFile, absoluteAudioPath)
+      const transcribedAudioOutput = await transcribeAudioBook(
+        "big-book",
+        true,
+        "C:/animal-farm/audio/animalfarm.mp3"
+      );
 
       // console.log(createdProjectName);
-      // console.log(existingProjectNames);
-      // console.log(transcribedAudioOutput);
+      console.log(existingProjectNames);
+      console.log(transcribedAudioOutput);
     });
   }
 

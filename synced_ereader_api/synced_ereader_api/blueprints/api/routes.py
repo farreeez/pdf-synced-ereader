@@ -15,6 +15,8 @@ api_bp = Blueprint("api", __name__, url_prefix="/api")
 # The created directory will hold all of the data generated during the transcription / alignment
 @api_bp.post("/create-project/<project_name>")
 def createProject(project_name):
+    Path(current_app.config["PROJECTS_DIRECTORY"]).mkdir(exist_ok=True)
+
     try:
         created_project_name = create_project(Path(current_app.config["PROJECTS_DIRECTORY"]), project_name)
     except FileExistsError:

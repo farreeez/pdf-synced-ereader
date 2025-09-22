@@ -17,7 +17,16 @@ def create_app(config_overrides=None):
     app = Flask(__name__)
     app.config.from_object("synced_ereader_api.defaults")
     app.config.from_prefixed_env()
-    CORS(app)
+    # Allow CORS from any origin. This is equivalent to the previous implicit
+    # call but is made explicit for clarity. Note: When origins='*', you cannot
+    # use credentials (cookies/Authorization with withCredentials in browsers).
+    # If later you need credentials, replace origins='*' with a specific list
+    # (e.g. ["http://localhost:5173", "https://your.app"]).
+    CORS(
+        app,
+        resources={r"/*": {"origins": "*"}},
+        supports_credentials=False,
+    )
 
     if config_overrides is not None:
         app.config.from_mapping(config_overrides)

@@ -30,7 +30,10 @@ export function transcribeAudioBookApi() {
   const { data, isLoading, isError, post } = createAsync();
 
   async function transcribeAudioBook(projectName, isSingleFile, audioBookPath) {
-    const requestBody = { path: audioBookPath, isSingleFile, isSingleFile };
+    const requestBody = {
+      path: audioBookPath,
+      is_single_audio_file: isSingleFile,
+    };
 
     const response = await post(
       `${baseUrl}/transcribe-audiobook/${projectName}`,

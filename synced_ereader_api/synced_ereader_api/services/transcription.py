@@ -45,6 +45,8 @@ def transcribe_audio(request_data: json, project_path:Path):
 
         for file in files:
             bookDir = file.absolute().__str__()
+            print("getting audio from file")
+            print(bookDir)
             audio = AudioSegment.from_file(bookDir)
 
             segLength = 60 * 5 * 1000
@@ -55,6 +57,9 @@ def transcribe_audio(request_data: json, project_path:Path):
                 chunkNumber = int(i / segLength) + 1
 
                 chunk.export(f"{chunkFolder}/{file.name} Chunk {chunkNumber:02}.mp3",format="mp3")
+
+                if(i > 2):
+                    break
 
         chunkFiles = sorted(f for f in Path(chunkFolder).iterdir() if f.is_file())
 

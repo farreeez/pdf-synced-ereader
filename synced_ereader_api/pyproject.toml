@@ -18,6 +18,7 @@ dependencies = [
     "pynput",
     "python-dotenv",
     "scikit-learn",
+    "flask-cors",
 ]
 
 [project.optional-dependencies]

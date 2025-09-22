@@ -7,6 +7,7 @@ from flask import Flask
 from synced_ereader_api.blueprints import api_bp
 from synced_ereader_api.logging import init_logging
 from dotenv import load_dotenv
+from flask_cors import CORS
 
 
 def create_app(config_overrides=None):
@@ -16,6 +17,7 @@ def create_app(config_overrides=None):
     app = Flask(__name__)
     app.config.from_object("synced_ereader_api.defaults")
     app.config.from_prefixed_env()
+    CORS(app)
 
     if config_overrides is not None:
         app.config.from_mapping(config_overrides)

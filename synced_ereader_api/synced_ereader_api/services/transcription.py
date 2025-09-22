@@ -1,19 +1,8 @@
-import whisper, json, vlc, time, os, sqlite3 
+import whisper, json
 from pydub import AudioSegment
 from pynput import keyboard
 from pathlib import Path
-
-def _validate_transcription_data(request_data):
-    # validate correct input fields were provided.
-    if not request_data:
-        raise ValueError("No data was provided in the request body.")
-
-    required_fields = ["path", "is_single_audio_file"]
-
-    missing = [field for field in required_fields if field not in request_data]
-
-    if len(missing) > 0:
-        raise ValueError("The following required fields are not in request body: " + ",".join(missing))
+from .shared import validate_request_data
 
 def _validate_audio_path(path, is_single_file):
     # if is single audio is true check that URI is for a file otherwise check that it is for a directory.
@@ -31,7 +20,7 @@ def _validate_audio_path(path, is_single_file):
 
 def transcribe_audio(request_data: json, project_path:Path):
     try:
-        _validate_transcription_data(request_data)
+        validate_request_data(request_data, ["path","is_single_audio_file"])
     except ValueError as e:
         raise e
 
@@ -49,7 +38,6 @@ def transcribe_audio(request_data: json, project_path:Path):
     else:
         files = sorted(f for f in audio_path.iterdir() if f.is_file())
     
-
     
     try:
         chunkFolder = project_path / "chunks"
@@ -58,8 +46,6 @@ def transcribe_audio(request_data: json, project_path:Path):
         for file in files:
             bookDir = file.absolute().__str__()
             audio = AudioSegment.from_file(bookDir)
-
-            durSecs = len(audio) 
 
             segLength = 60 * 5 * 1000
 
@@ -71,17 +57,16 @@ def transcribe_audio(request_data: json, project_path:Path):
                 chunk.export(f"{chunkFolder}/{file.name} Chunk {chunkNumber:02}.mp3",format="mp3")
 
         chunkFiles = sorted(f for f in Path(chunkFolder).iterdir() if f.is_file())
-        print(chunkFiles)
 
         model = whisper.load_model("base")
         currTime = 0.0
         currChunk = 0
 
-        transcript_folder = chunkFolder / "transcriptJson"
+        transcript_folder = project_path / "transcriptJson"
         transcript_folder.mkdir(parents=True, exist_ok=True)
 
         for chunk in chunkFiles:
-            print(f"RUNNING MODEL {chunkFolder}/{chunk.name}")
+            print(f"{chunkFolder}/{chunk.name}")
             result = model.transcribe(f"{chunkFolder}/{chunk.name}")
             currChunk += 1
             

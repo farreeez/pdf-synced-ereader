@@ -2,7 +2,6 @@
 from pathlib import Path
 from typing import List
 
-
 def create_project(base_dir: Path, name: str) -> str:
     if not name or not name.replace("-", "").replace("_", "").isalnum():
         raise ValueError("Invalid project name.")

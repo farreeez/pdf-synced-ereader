@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request, current_app
 from pathlib import Path
-from synced_ereader_api.services import create_project, list_projects, transcribe_audio, does_project_exist
+from synced_ereader_api.services import create_project, list_projects, transcribe_audio 
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -34,8 +34,6 @@ def getProjectNames():
 # containing all of the audio files for the audiobooks if it is false 
 @api_bp.post("/transcribe-audiobook/<project_name>")
 def transcribeAudioBook(project_name):
-    data = request.get_json()
-
     base_dir = Path(current_app.config["PROJECTS_DIRECTORY"])
 
     project_path = (base_dir / project_name).resolve()
@@ -43,14 +41,16 @@ def transcribeAudioBook(project_name):
     if not project_path.exists():
         return jsonify({"error":"Project name does not exist."}), 400
 
+    data = request.get_json()
+
     try:
-        transcribe_audio(data, project_name, project_path)
+        transcribe_audio(data, project_path)
     except ValueError as e:
         return jsonify({"error": str(e)}), 400
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    return 201
+    return '',201
 
 @api_bp.post("/coarse-alignment/<project_name>")
 def coarselyAlignTranscriptToPdf(project_name):
@@ -63,4 +63,4 @@ def coarselyAlignTranscriptToPdf(project_name):
 
     data = request.get_json()
 
-    return 201
+    return '',201

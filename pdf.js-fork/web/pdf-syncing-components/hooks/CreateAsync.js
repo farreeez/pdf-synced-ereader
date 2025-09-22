@@ -1,9 +1,9 @@
-import axios from "axios";
+import { postJson } from "./requestHelper.js";
 
 /**
  * Posts data to an API endpoint without relying on React state.
  * @param {string} [initialUrl] - Default URL used when one is not provided to post.
- * @returns {{ readonly data: unknown, readonly isLoading: boolean, readonly isError: boolean, post: (url?: string, body?: any, config?: import("axios").AxiosRequestConfig) => Promise<unknown> }}
+ * @returns {{ readonly data: unknown, readonly isLoading: boolean, readonly isError: boolean, post: (url?: string, body?: any, config?: { headers?: Record<string,string> }) => Promise<unknown> }}
  */
 export default function createAsync(initialUrl = "") {
   const state = {
@@ -17,13 +17,15 @@ export default function createAsync(initialUrl = "") {
     state.isError = false;
 
     try {
-      const response = await axios.post(url, body, config);
+      const response = await postJson(url, body, config);
       state.data = response.data;
       return response.data;
     } catch (error) {
       state.isError = true;
       const message =
-        error?.response?.data?.message || "An unexpected error occurred";
+        error?.response?.data?.message ||
+        error?.message ||
+        "An unexpected error occurred";
       throw typeof message === "string" ? new Error(message) : new Error();
     } finally {
       state.isLoading = false;

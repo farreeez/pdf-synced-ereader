@@ -18,7 +18,6 @@ dependencies = [
     "scikit-learn",
     "flask-cors",
     "pydub",
-    "audioop-lts",
 ]
 
 [project.optional-dependencies]

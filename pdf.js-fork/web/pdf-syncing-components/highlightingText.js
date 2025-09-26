@@ -37,9 +37,9 @@ class HighlightingText {
       const existingProjectNames = await getProjectNames();
       // Call transcribe audiobook endpoint (projectName, isSingleFile, absoluteAudioPath)
       const transcribedAudioOutput = await transcribeAudioBook(
-        "big-book",
+        "test",
         true,
-        "C:/animal-farm/audio/animalfarm.mp3"
+        "C:/Users/xxfar/OneDrive/Desktop/coding/projects/pdf-synced-ereader/books/Sam Walton, made in America my story - Sam Walton/audio/Sam Walton Made in America (Unabridged) - 01.m4b"
       );
 
       // console.log(createdProjectName);

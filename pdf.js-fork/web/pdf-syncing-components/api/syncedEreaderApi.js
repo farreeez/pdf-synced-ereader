@@ -36,7 +36,7 @@ export function transcribeAudioBookApi() {
     };
 
     const response = await post(
-      `${baseUrl}/transcribe-audiobook/${projectName}`,
+      `${baseUrl}transcribe-audiobook/${projectName}`,
       requestBody
     );
 

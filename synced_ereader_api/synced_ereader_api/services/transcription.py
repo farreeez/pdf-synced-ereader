@@ -38,7 +38,7 @@ def transcribe_audio(request_data: json, project_path:Path):
     else:
         files = sorted(f for f in audio_path.iterdir() if f.is_file())
     
-    
+    # TODO: Create a metadata json file along with the json dumps that can then be used to validate the status of the json dumps.
     try:
         chunkFolder = project_path / "chunks"
         chunkFolder.mkdir(parents=True, exist_ok=True)
@@ -81,6 +81,7 @@ def transcribe_audio(request_data: json, project_path:Path):
                     segment["end"] += currTime
             
             currTime = result["segments"][-1]["end"]
+            print("created jsonDump" + str(currChunk))
             with open(f"{transcript_folder}/jsonDump{currChunk:02}.txt", "w", encoding="utf-8") as f:
                 f.write(json.dumps(result["segments"], indent=4))
     except Exception as e:

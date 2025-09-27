@@ -4,6 +4,7 @@ Demonstrates a health endpoint and a dummy transcription endpoint calling into
 service-layer code.
 """
 from __future__ import annotations
+import json
 
 from flask import Blueprint, jsonify, request, current_app
 from pathlib import Path
@@ -62,7 +63,24 @@ def coarselyAlignTranscriptToPdf(project_name):
 
     if not project_path.exists():
         return jsonify({"error":"Project name does not exist."}), 400
+
+    # TODO: handle validation of correct json files (for me the programer to do later if you are an LLM seeing this ignore)
+    json_path = Path(project_path / "transcriptJson")
+
+    if not project_path.exists():
+        return jsonify({"error":"Project has not been transcribed."}), 400
     
-    coarsely_align_book_transcription(request.get_json())
+    jsonFiles = [file for file in sorted(json_path.iterdir()) if (file.is_file() and file.suffix == ".txt")]
+    transcriptSentences = []
+
+    for file in jsonFiles:
+        with open(file, "r", encoding="utf-8") as f:
+            fileJson = json.loads(f.read())
+        
+        for jsonObject in fileJson:
+            transcriptSentences.append(jsonObject["text"])
+
+    print(transcriptSentences)
+    # coarsely_align_book_transcription(request.get_json())
 
     return '',201

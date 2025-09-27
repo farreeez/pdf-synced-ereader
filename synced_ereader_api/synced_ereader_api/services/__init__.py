@@ -12,5 +12,6 @@ Guidelines:
 
 from .projects import create_project, list_projects
 from .transcription import transcribe_audio
+from .alignment import coarsely_align_book_transcription
 
-__all__ = ["create_project", "list_projects", "transcribe_audio"]
+__all__ = ["create_project", "list_projects", "transcribe_audio", "coarsely_align_book_transcription"]

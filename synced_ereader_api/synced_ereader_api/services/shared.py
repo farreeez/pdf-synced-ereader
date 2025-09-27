@@ -1,8 +1,5 @@
 import json
 
-def create_base_dir():
-    Path(current_app.config["PROJECTS_DIRECTORY"])
-
 def validate_request_data(request_data:json , required_fields:list[str]):
     # validate correct input fields were provided.
     if not request_data:

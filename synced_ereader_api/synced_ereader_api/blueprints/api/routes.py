@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from flask import Blueprint, jsonify, request, current_app
 from pathlib import Path
-from synced_ereader_api.services import create_project, list_projects, transcribe_audio 
+from synced_ereader_api.services import create_project, list_projects, transcribe_audio, coarsely_align_book_transcription
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -62,7 +62,7 @@ def coarselyAlignTranscriptToPdf(project_name):
 
     if not project_path.exists():
         return jsonify({"error":"Project name does not exist."}), 400
-
-    data = request.get_json()
+    
+    coarsely_align_book_transcription(request.get_json())
 
     return '',201

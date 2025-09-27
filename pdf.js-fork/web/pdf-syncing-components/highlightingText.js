@@ -1,8 +1,4 @@
-import {
-  createProjectApi,
-  getProjectNamesApi,
-  transcribeAudioBookApi,
-} from "./api/syncedEreaderApi.js";
+import { coarselyAlignTextApi } from "./api/syncedEreaderApi.js";
 
 class HighlightingText {
   #opts;
@@ -17,34 +13,19 @@ class HighlightingText {
 
   #bindListeners() {
     this.#eventBus._on("getText", async evt => {
-      // console.log("getting text for highlighting");
+      console.log("getting text for highlighting");
 
-      // if (!this.#texts || this.#texts.length == 0) {
-      //   this.#texts = await PDFViewerApplication.pdfViewer.getAllText(true);
-      // }
-
-      // PDFViewerApplication.pdfViewer.currentPageNumber = 300;
-
-      // console.log(this.#texts);
+      if (!this.#texts || this.#texts.length == 0) {
+        this.#texts = await PDFViewerApplication.pdfViewer.getAllText(true);
+      }
 
       console.log("Testing endpoints");
 
-      const { createProject, data, isLoading, isError } = createProjectApi();
-      const { getProjectNames } = getProjectNamesApi();
-      const { transcribeAudioBook } = transcribeAudioBookApi();
+      const { coarselyAlignText } = coarselyAlignTextApi();
 
-      // const createdProjectName = await createProject("big-book");
-      const existingProjectNames = await getProjectNames();
-      // Call transcribe audiobook endpoint (projectName, isSingleFile, absoluteAudioPath)
-      const transcribedAudioOutput = await transcribeAudioBook(
-        "test",
-        true,
-        "C:/Users/xxfar/OneDrive/Desktop/coding/projects/pdf-synced-ereader/books/Sam Walton, made in America my story - Sam Walton/audio/Sam Walton Made in America (Unabridged) - 01.m4b"
-      );
+      const response = coarselyAlignText("big-book", this.#texts);
 
-      // console.log(createdProjectName);
-      console.log(existingProjectNames);
-      console.log(transcribedAudioOutput);
+      console.log(response);
     });
   }
 

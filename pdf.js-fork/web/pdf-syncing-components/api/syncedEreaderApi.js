@@ -45,3 +45,22 @@ export function transcribeAudioBookApi() {
 
   return { transcribeAudioBook, data, isLoading, isError };
 }
+
+export function coarselyAlignTextApi() {
+  const { data, isLoading, isError, post } = createAsync();
+
+  async function coarselyAlignText(projectName, bookText) {
+    const requestBody = {
+      pages: bookText,
+    };
+
+    const response = await post(
+      `${baseUrl}coarse-alignment/${projectName}`,
+      requestBody
+    );
+
+    return response;
+  }
+
+  return { coarselyAlignText, data, isLoading, isError };
+}

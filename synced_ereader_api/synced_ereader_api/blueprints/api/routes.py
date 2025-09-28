@@ -72,6 +72,7 @@ def coarselyAlignTranscriptToPdf(project_name):
     
     jsonFiles = [file for file in sorted(json_path.iterdir()) if (file.is_file() and file.suffix == ".txt")]
     transcriptSentences = []
+    transcriptStartTimes =[]
 
     for file in jsonFiles:
         with open(file, "r", encoding="utf-8") as f:
@@ -79,8 +80,8 @@ def coarselyAlignTranscriptToPdf(project_name):
         
         for jsonObject in fileJson:
             transcriptSentences.append(jsonObject["text"])
+            transcriptStartTimes.append(jsonObject["start"])
 
-    print(transcriptSentences)
-    # coarsely_align_book_transcription(request.get_json())
+    alignmentData = coarsely_align_book_transcription(request.get_json(), transcriptSentences, transcriptStartTimes)
 
-    return '',201
+    return jsonify({"alignmentData" : alignmentData}),201

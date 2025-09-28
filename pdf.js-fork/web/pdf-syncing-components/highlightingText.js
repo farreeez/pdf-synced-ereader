@@ -23,7 +23,7 @@ class HighlightingText {
 
       const { coarselyAlignText } = coarselyAlignTextApi();
 
-      const response = coarselyAlignText("big-book", this.#texts);
+      const response = await coarselyAlignText("sam", this.#texts);
 
       console.log(response);
     });

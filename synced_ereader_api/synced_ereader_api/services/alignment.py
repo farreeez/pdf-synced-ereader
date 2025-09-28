@@ -3,8 +3,8 @@ import re
 import difflib
 from typing import Any, Dict, List, Optional, Tuple
 from sklearn.feature_extraction.text import TfidfVectorizer
-
-from .shared import validate_request_data
+from pathlib import Path
+from .shared import validate_request_data 
 
 
 def _validate_inputs(pages: Any, transcript_sentences: Any, transcript_start_times: Any) -> Tuple[List[str], List[str], List[float]]:
@@ -152,6 +152,47 @@ def _build_sliding_chunks(
                 break
     return chunks
 
+def retreive_json_data(json_path:Path):
+    jsonFiles = [file for file in sorted(json_path.iterdir()) if (file.is_file() and file.suffix == ".txt")]
+    transcript_sentences = []
+    transcript_start_times = []
+
+    for file in jsonFiles:
+        with open(file, "r", encoding="utf-8") as f:
+            fileJson = json.loads(f.read())
+        
+        for jsonObject in fileJson:
+            transcript_sentences.append(jsonObject["text"])
+            transcript_start_times.append(jsonObject["start"])
+    
+    return transcript_sentences, transcript_start_times
+
+def check_if_alignment_data_exists(project_path):
+    alignment_data_path = Path(project_path / "alignmentData" / "alignment-data.txt" )
+
+    return alignment_data_path.exists() and alignment_data_path.is_file()
+
+def get_existing_alignment_data(project_path):
+    if(not check_if_alignment_data_exists(project_path)):
+        raise Exception("alignment data does not exist.")
+    
+    alignment_data_path = Path(project_path / "alignmentData" / "alignment-data.txt" )
+
+    with open(alignment_data_path, "r", encoding="utf-8") as f:
+        alignment_data = json.loads(f.read())
+    
+    if(not alignment_data):
+        raise Exception("alignment data does not exist.")
+    
+    return alignment_data
+
+
+def persist_alignment_data(project_path, alignment_data):
+    alignment_data_folder = Path(project_path / "alignmentData")
+    alignment_data_folder.mkdir(parents=True, exist_ok=True)
+
+    with open(f"{alignment_data_folder}/alignment-data.txt", "w", encoding="utf-8") as f:
+        f.write(json.dumps(alignment_data, indent=4))
 
 def coarsely_align_book_transcription(request_data: json, transcriptSentences: list, transcriptStartTimes: list):
     try:
@@ -215,7 +256,6 @@ def coarsely_align_book_transcription(request_data: json, transcriptSentences: l
                     "fine_text": fine_text,
                     # Additional metadata
                     "start_time": transcript_start_times[s_idx],
-                    "chunk_text": chunk_text,
                 }
             )
 

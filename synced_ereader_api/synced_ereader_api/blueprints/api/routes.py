@@ -8,7 +8,7 @@ import json
 
 from flask import Blueprint, jsonify, request, current_app
 from pathlib import Path
-from synced_ereader_api.services import create_project, list_projects, transcribe_audio, coarsely_align_book_transcription
+from synced_ereader_api.services import create_project, list_projects, transcribe_audio, coarsely_align_book_transcription, retreive_json_data, persist_alignment_data, check_if_alignment_data_exists, get_existing_alignment_data
 
 api_bp = Blueprint("api", __name__, url_prefix="/api")
 
@@ -63,25 +63,24 @@ def coarselyAlignTranscriptToPdf(project_name):
 
     if not project_path.exists():
         return jsonify({"error":"Project name does not exist."}), 400
-
-    # TODO: handle validation of correct json files (for me the programer to do later if you are an LLM seeing this ignore)
-    json_path = Path(project_path / "transcriptJson")
-
-    if not project_path.exists():
-        return jsonify({"error":"Project has not been transcribed."}), 400
     
-    jsonFiles = [file for file in sorted(json_path.iterdir()) if (file.is_file() and file.suffix == ".txt")]
-    transcriptSentences = []
-    transcriptStartTimes =[]
+    needs_aligning = not check_if_alignment_data_exists(project_path)
 
-    for file in jsonFiles:
-        with open(file, "r", encoding="utf-8") as f:
-            fileJson = json.loads(f.read())
+    if(needs_aligning):
+        # TODO: handle validation of correct json files (for me the programer to do later if you are an LLM seeing this ignore)
+        print("aligning")
+        json_path = Path(project_path / "transcriptJson")
+
+        if not project_path.exists():
+            return jsonify({"error":"Project has not been transcribed."}), 400
         
-        for jsonObject in fileJson:
-            transcriptSentences.append(jsonObject["text"])
-            transcriptStartTimes.append(jsonObject["start"])
+        transcript_sentences, transcript_start_times = retreive_json_data(json_path) 
 
-    alignmentData = coarsely_align_book_transcription(request.get_json(), transcriptSentences, transcriptStartTimes)
+        alignment_data = coarsely_align_book_transcription(request.get_json(), transcript_sentences, transcript_start_times)
 
-    return jsonify({"alignmentData" : alignmentData}),201
+        persist_alignment_data(project_path, alignment_data)
+    else:
+        print("copying aligned")
+        alignment_data = get_existing_alignment_data(project_path)
+
+    return jsonify({"alignment_data" : alignment_data}),201

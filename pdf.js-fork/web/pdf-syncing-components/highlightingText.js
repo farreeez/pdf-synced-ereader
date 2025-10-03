@@ -1,3 +1,4 @@
+import { PDFViewerApplication } from "../app.js";
 import { coarselyAlignTextApi } from "./api/syncedEreaderApi.js";
 
 class HighlightingText {
@@ -24,10 +25,11 @@ class HighlightingText {
 
       if (!this.#alignmentData) {
         console.log("Testing endpoints");
-        this.#alignmentData = await coarselyAlignText("sam", this.#texts);
+        const alignmentDataObject = await coarselyAlignText("sam", this.#texts);
+        this.#alignmentData = alignmentDataObject.alignment_data;
       }
 
-      console.log(this.#alignmentData);
+      // console.log(this.#alignmentData);
       // manage highlighting text
       this._highlightText(this.#alignmentData[0]);
     });
@@ -47,9 +49,20 @@ class HighlightingText {
   // "start_time": transcript_start_times[s_idx],
 
   _highlightText(alignmentData) {
+    const pageIndex = alignmentData.page_index;
+    const pdfViewer = PDFViewerApplication.pdfViewer;
     // scroll to page if not on page.
-    const textPage = alignmentData.pageIndex;
-    console.log(textPage);
+    if (pdfViewer.currentPageNumber != pageIndex) {
+      pdfViewer.currentPageNumber = 100;
+      setTimeout(() => {}, 1000);
+    }
+
+    // starts from 0
+    const pageView = pdfViewer.getPageView(99);
+
+    console.log(pageView);
+    console.log(alignmentData.page_index);
+    console.log(alignmentData);
     // find text within the alignment data and highlight.
   }
 

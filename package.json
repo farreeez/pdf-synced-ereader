@@ -2,8 +2,9 @@
   "name": "pdf-synced-ereader",
   "version": "1.0.0",
   "description": "![Status](https://img.shields.io/badge/status-work_in_progress-yellow.svg)",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
+    "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

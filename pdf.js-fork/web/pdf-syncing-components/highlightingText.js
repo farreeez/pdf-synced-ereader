@@ -34,6 +34,7 @@ class HighlightingText {
       this._highlightText(this.#alignmentData[0]);
     });
   }
+
   // "sentence": sent,
   // "page_index": best_chunk["page_index"],
   // # Coarse alignment outputs
@@ -51,19 +52,27 @@ class HighlightingText {
   _highlightText(alignmentData) {
     const pageIndex = alignmentData.page_index;
     const pdfViewer = PDFViewerApplication.pdfViewer;
+
     // scroll to page if not on page.
-    if (pdfViewer.currentPageNumber != pageIndex) {
-      pdfViewer.currentPageNumber = 100;
-      setTimeout(() => {}, 1000);
+    // pageIndex is 0-based, and currentPageNumber is 1-based.
+    if (pdfViewer.currentPageNumber !== pageIndex + 1) {
+      pdfViewer.currentPageNumber = pageIndex + 1;
     }
 
-    // starts from 0
-    const pageView = pdfViewer.getPageView(99);
+    // The text to be highlighted, derived from alignment data.
+    const textToHighlight = alignmentData.fine_text;
 
-    console.log(pageView);
-    console.log(alignmentData.page_index);
-    console.log(alignmentData);
-    // find text within the alignment data and highlight.
+    if (!textToHighlight) {
+      console.error("No text to highlight provided in alignment data.");
+      return;
+    }
+
+    // The find controller is event-driven. Dispatch a "find" event.
+    PDFViewerApplication.eventBus.dispatch("find", {
+      query: textToHighlight,
+      phraseSearch: true,
+      highlightAll: true,
+    });
   }
 
   reset() {

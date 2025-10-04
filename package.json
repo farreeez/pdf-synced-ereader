@@ -1,0 +1,23 @@
+{
+  "name": "pdf-synced-ereader",
+  "version": "1.0.0",
+  "description": "![Status](https://img.shields.io/badge/status-work_in_progress-yellow.svg)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/farreeez/pdf-synced-ereader.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/farreeez/pdf-synced-ereader/issues"
+  },
+  "homepage": "https://github.com/farreeez/pdf-synced-ereader#readme",
+  "devDependencies": {
+    "electron": "^38.2.1"
+  }
+}

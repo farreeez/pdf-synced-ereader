@@ -1,0 +1,25 @@
+.HomeHeader {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 5px;
+}
+
+.HomeContainer {
+  width: 75%;
+  height: 90%;
+  color: white;
+}
+
+.BooksContainer {
+  outline-width: 1px;
+  outline-style: solid;
+  outline-color: white;
+}
+
+.BooksGrid {
+  padding: 10px 10px;
+}
+
+.test {
+  margin: 0px 0px;
+}

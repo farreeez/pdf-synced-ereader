@@ -1,7 +1,7 @@
 .HomeHeader {
   display: flex;
   justify-content: space-between;
-  padding-bottom: 5px;
+  margin-bottom: 25px;
 }
 
 .HomeContainer {
@@ -12,14 +12,41 @@
 
 .BooksContainer {
   outline-width: 1px;
-  outline-style: solid;
-  outline-color: white;
+  outline-style: dashed;
+  outline-color: rgb(255, 255, 255, 0.3);
+  border-radius: 1rem;
 }
 
 .BooksGrid {
   padding: 10px 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.test {
-  margin: 0px 0px;
+.title {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.NoBooksDescription {
+  margin: 10px 160px;
+  text-align: center;
+  color: grey;
+}
+
+.BooksGrid .HomeButton {
+  margin-top: 10px;
+  margin-bottom: 80px;
+}
+
+.HomeButton {
+  border-radius: 0.3rem;
+  border: none;
+  padding: 10px 15px;
+  font-weight: bold;
+}
+
+.HomeButton:hover {
+  background-color: rgb(212, 211, 211);
 }

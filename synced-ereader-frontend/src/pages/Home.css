@@ -50,3 +50,11 @@
 .HomeButton:hover {
   background-color: rgb(212, 211, 211);
 }
+
+.BookIcon {
+  width: 96px;
+  height: 96px;
+  margin: 40px 0 12px;
+  display: block;
+  color: #ffffff; /* uses currentColor for stroke/fill */
+}

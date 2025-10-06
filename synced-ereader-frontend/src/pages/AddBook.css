@@ -1,0 +1,65 @@
+.description {
+  color: grey;
+}
+
+.AddBook {
+  width: 90%;
+  height: 100%;
+  margin: 20px 20px;
+}
+
+.AddBook .Header .DefaultButton {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  padding: 5px 10px;
+  color: white;
+  background-color: black;
+}
+
+.AddBook .Header .DefaultButton:hover {
+  background-color: rgb(53, 53, 53);
+}
+
+.AddBookContainer {
+  outline-width: 1px;
+  outline-style: solid;
+  outline-color: rgb(255, 255, 255, 0.3);
+  border-radius: 1rem;
+  padding: 10px 10px;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.InputHeader {
+  margin: 0px 0px;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.ProjectNameInput {
+  border-radius: 0.4rem;
+  border-color: grey;
+  border-style: solid;
+  border-width: 1px;
+  outline: grey;
+  background-color: black;
+  color: white;
+  padding: 5px 10px;
+  width: 70%;
+}
+
+.AddBookButtonContainer {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin: 0px 5px;
+}
+
+.AddBookButtonContainer button {
+  width: 50%;
+}
+
+.AddBookButton {
+}

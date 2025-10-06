@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { HashRouter, Route, Routes } from "react-router-dom";
 import App from "./App";
 import "./index.css";
+import AddBook from "./pages/AddBook";
 import Home from "./pages/Home";
 import reportWebVitals from "./reportWebVitals";
 
@@ -14,6 +15,7 @@ root.render(
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
+          <Route path="/add-book" element={<AddBook />} />
         </Route>
       </Routes>
     </HashRouter>

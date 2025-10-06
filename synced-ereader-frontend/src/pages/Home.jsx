@@ -1,14 +1,23 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./Home.css";
 
 export default function Home() {
   const [books, setBooks] = useState([]);
+  const navigate = useNavigate();
 
   return (
     <div className="HomeContainer">
       <div className="HomeHeader">
         <div className="title">Audiobook Synced Ereader</div>
-        <button className="HomeButton">+ New Book</button>
+        <button
+          className="DefaultButton"
+          onClick={() => {
+            navigate("/add-book");
+          }}
+        >
+          + New Book
+        </button>
       </div>
       <div className="BooksContainer">
         {!books || books.length != 0 ? (
@@ -47,7 +56,14 @@ export default function Home() {
               Add your first book to start syncing PDFs with audiobooks for a
               better reading experience.
             </div>
-            <button className="HomeButton">+ Add Your First Book</button>
+            <button
+              className="DefaultButton"
+              onClick={() => {
+                navigate("/add-book");
+              }}
+            >
+              + Add Your First Book
+            </button>
           </div>
         )}
       </div>

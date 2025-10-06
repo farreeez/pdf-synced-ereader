@@ -24,31 +24,20 @@
   align-items: center;
 }
 
-.title {
-  font-weight: bold;
-  font-size: 20px;
-}
-
 .NoBooksDescription {
   margin: 10px 160px;
   text-align: center;
   color: grey;
 }
 
-.BooksGrid .HomeButton {
+.BooksGrid .DefaultButton {
   margin-top: 10px;
   margin-bottom: 80px;
 }
 
-.HomeButton {
-  border-radius: 0.3rem;
-  border: none;
-  padding: 10px 15px;
-  font-weight: bold;
-}
-
-.HomeButton:hover {
+.DefaultButton:hover {
   background-color: rgb(212, 211, 211);
+  cursor: pointer;
 }
 
 .BookIcon {

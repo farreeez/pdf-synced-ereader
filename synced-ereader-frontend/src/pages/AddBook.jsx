@@ -8,6 +8,10 @@ export default function AddBook() {
   const [pdfFile, setPdfFile] = useState(null);
   const [audioFiles, setAudioFiles] = useState([]);
 
+  const addBook = (event) => {
+    event.preventDefault();
+  };
+
   return (
     <div className="AddBook">
       <div className="Header">
@@ -61,7 +65,13 @@ export default function AddBook() {
           >
             Cancel
           </button>
-          <button className="AddBookButton">Add Book</button>
+          <button
+            className="AddBookButton"
+            disabled={!(pdfFile && audioFiles.length > 0)}
+            onClick={addBook}
+          >
+            Add Book
+          </button>
         </div>
       </div>
     </div>

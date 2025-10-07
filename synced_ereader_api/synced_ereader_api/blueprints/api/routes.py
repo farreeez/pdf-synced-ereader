@@ -35,6 +35,7 @@ def getProjectNames():
 # Expects a boolean value in the body that shows wether the expected audio book is in multiple files or in a single file.
 # If it is a single audio file then the URI provided should be the URI to the singular audio file if the boolean is true or to the directory
 # containing all of the audio files for the audiobooks if it is false 
+# TODO: CHANGE TO TAKE IN AN ARRAY OF FILES INSTEAD OF A DIRECTORY URL
 @api_bp.post("/transcribe-audiobook/<project_name>")
 def transcribeAudioBook(project_name):
     base_dir = Path(current_app.config["PROJECTS_DIRECTORY"])

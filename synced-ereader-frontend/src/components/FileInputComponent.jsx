@@ -2,9 +2,10 @@ import { useRef } from "react";
 import "./FileInputComponent.css";
 
 // if is pdf is true then the file input is a pdf file otherwise it is an audio file.
+// selectedFiles is an array if you are using an audio file otherwise it only represents a single file if you are using a pdf file
 export default function FileInputComponent({
-  selectedFile,
-  setSelectedFile,
+  selectedFiles,
+  setSelectedFiles,
   isPdf,
 }) {
   const fileInputRef = useRef(null);
@@ -15,9 +16,16 @@ export default function FileInputComponent({
 
   const handleFileSelect = (event) => {
     event.preventDefault();
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedFile(file);
+    if (!isPdf) {
+      const files = event.target.files;
+      if (files && files.length > 0) {
+        setSelectedFiles(files);
+      }
+    } else {
+      const file = event.target.files[0];
+      if (file) {
+        setSelectedFiles(file);
+      }
     }
   };
 
@@ -55,7 +63,11 @@ export default function FileInputComponent({
         />
       </svg>
       {isPdf ? <p>Upload PDF</p> : <p>Upload Audio File(s)</p>}
-      {selectedFile && <p>Selected: {selectedFile.name}</p>}
+      {!isPdf && selectedFiles && selectedFiles.length > 0 && (
+        <p>Selected: {selectedFiles.length}</p>
+      )}
+
+      {isPdf && selectedFiles && <p>Selected: {selectedFiles.name}</p>}
     </div>
   );
 }

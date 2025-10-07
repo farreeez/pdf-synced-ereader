@@ -6,7 +6,7 @@ import "./AddBook.css";
 export default function AddBook() {
   const navigate = useNavigate();
   const [pdfFile, setPdfFile] = useState(null);
-  const [audioFile, setAudioFile] = useState(null);
+  const [audioFiles, setAudioFiles] = useState([]);
 
   return (
     <div className="AddBook">
@@ -39,16 +39,16 @@ export default function AddBook() {
         <div className="AddPdfContainer">
           <p className="InputHeader">Add your book's pdf</p>
           <FileInputComponent
-            selectedFile={pdfFile}
-            setSelectedFile={setPdfFile}
+            selectedFiles={pdfFile}
+            setSelectedFiles={setPdfFile}
             isPdf={true}
           />
         </div>
         <div className="AddAudioContainer">
           <p className="InputHeader">Add your book's audio file</p>
           <FileInputComponent
-            selectedFile={audioFile}
-            setSelectedFile={setAudioFile}
+            selectedFiles={audioFiles}
+            setSelectedFiles={setAudioFiles}
             isPdf={false}
           />
         </div>

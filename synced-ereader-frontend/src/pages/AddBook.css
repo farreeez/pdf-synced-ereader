@@ -25,7 +25,7 @@
   outline-style: solid;
   outline-color: rgb(255, 255, 255, 0.3);
   border-radius: 1rem;
-  padding: 10px 10px;
+  padding: 10px 20px;
   margin-top: 20px;
   display: flex;
   flex-direction: column;
@@ -54,12 +54,36 @@
   display: flex;
   justify-content: center;
   gap: 5px;
-  margin: 0px 5px;
+  margin: 0px 0px;
 }
 
 .AddBookButtonContainer button {
   width: 50%;
+  padding: 10px 0px;
+  border-radius: 0.3rem;
+  border-style: solid;
 }
 
-.AddBookButton {
+.AddBookButtonContainer button:hover {
+  cursor: pointer;
+}
+
+.AddBookButton:hover {
+  background-color: rgba(178, 177, 177);
+}
+
+.CancelButton {
+  background-color: black;
+  border-width: 1px;
+  border-color: rgb(255, 255, 255, 0.3);
+  color: white;
+}
+
+.CancelButton:hover {
+  background-color: rgb(128, 128, 128, 0.3);
+}
+
+#isMultipleFiles {
+  margin: 0px 3px;
+  margin-bottom: 3px;
 }

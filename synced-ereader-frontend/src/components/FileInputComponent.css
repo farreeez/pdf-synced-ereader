@@ -1,0 +1,25 @@
+.InputContainer {
+  width: 90%;
+  background-color: rgb(44, 44, 44);
+  text-align: center;
+  padding: 20px 0px;
+  border-radius: 0.5rem;
+  border-style: dashed;
+  border-width: 2px;
+  border-color: rgb(70, 70, 70);
+}
+
+.InputContainer:hover {
+  cursor: pointer;
+  border-color: rgb(170, 170, 170);
+}
+
+.InputContainer p {
+  margin: 0px 0px;
+  color: pink;
+}
+
+.InputContainer .UploadIcon {
+  width: 48px;
+  height: 48px;
+}

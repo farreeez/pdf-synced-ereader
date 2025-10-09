@@ -35,3 +35,15 @@ export function transcribeAudioBookAsync() {
 
   return { transcribeAudioBook, isError, isLoading };
 }
+
+export function coarselyAlignTranscriptToPdfAsync() {
+  const { isLoading, isError, post } = createAsync();
+
+  async function coarselyAlignTranscriptToPdf(bookName, pdfPagesArray) {
+    return await post(`${API_BASE_URL}/coarse-alignment/${bookName}`, {
+      pages: pdfPagesArray,
+    });
+  }
+
+  return { coarselyAlignTranscriptToPdf, isError, isLoading };
+}

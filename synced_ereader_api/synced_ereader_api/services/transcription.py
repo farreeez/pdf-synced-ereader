@@ -4,39 +4,29 @@ from pynput import keyboard
 from pathlib import Path
 from .shared import validate_request_data
 
-def _validate_audio_path(path, is_single_file):
-    # if is single audio is true check that URI is for a file otherwise check that it is for a directory.
-    if type(is_single_file) is not bool:
-        raise ValueError("The field is_single_audio_file must be a boolean.")
-
+def _validate_audio_path(path):
     if not (path.is_absolute() and path.exists()):
         raise ValueError("path provided is invalid.")
 
-    if is_single_file and path.is_dir():
-        raise ValueError("is_single_file is set to true, but the path provided is for a folder.")
-
-    if (not is_single_file)  and path.is_file():
-        raise ValueError("is_single_file is set to false, but the path provided is for a file.")
-
 def transcribe_audio(request_data: json, project_path:Path):
     try:
-        validate_request_data(request_data, ["path","is_single_audio_file"])
+        validate_request_data(request_data, ["paths"])
     except ValueError as e:
         raise e
 
-    is_single_file = request_data["is_single_audio_file"]
-    raw_audio_path = request_data["path"]
-    audio_path = Path(raw_audio_path)
-
-    try:
-        _validate_audio_path(audio_path, is_single_file)
-    except ValueError as e:
-        raise e
+    raw_audio_paths = request_data["paths"]
+    audio_paths = []
     
-    if is_single_file:
-        files = [audio_path]
-    else:
-        files = sorted(f for f in audio_path.iterdir() if f.is_file())
+    for raw_audio_path in raw_audio_paths:
+        audio_path = Path(raw_audio_path)
+
+        try:
+            _validate_audio_path(audio_path)
+            audio_paths.append(audio_path)
+        except ValueError as e:
+            raise e
+    
+    files = sorted(audio_paths)
     
     # TODO: Create a metadata json file along with the json dumps that can then be used to validate the status of the json dumps.
     try:

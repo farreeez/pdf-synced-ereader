@@ -54,7 +54,7 @@ def transcribeAudioBook(project_name):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    return '',201
+    return '', 201
 
 @api_bp.post("/coarse-alignment/<project_name>")
 def coarselyAlignTranscriptToPdf(project_name):

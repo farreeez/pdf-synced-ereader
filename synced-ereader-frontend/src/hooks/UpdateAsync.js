@@ -6,7 +6,7 @@ import { useState } from "react";
  * @param {string} initialUrl - The API endpoint URL
  * @returns {Object} Object containing data, loading state, error state, and put function
  */
-export default function updateAsync(initialUrl = "") {
+export default function setUpdateAsync(initialUrl = "") {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);

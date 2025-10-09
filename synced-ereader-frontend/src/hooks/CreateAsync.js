@@ -2,11 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 
 /**
- * Posts data to API.
+ * React hook: posts data to an API endpoint.
  * @param initialUrl
  * @returns {{data: unknown, isLoading: boolean, isError: boolean, post: ((function(*): Promise<any|undefined>)|*)}}
  */
-export default function createAsync(initialUrl = "") {
+export default function useCreateAsync(initialUrl = "") {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);

@@ -19,7 +19,7 @@ export default function FileInputComponent({
     if (!isPdf) {
       const files = event.target.files;
       if (files && files.length > 0) {
-        setSelectedFiles(files);
+        setSelectedFiles(Array.from(files));
       }
     } else {
       const file = event.target.files[0];
@@ -37,7 +37,7 @@ export default function FileInputComponent({
         onChange={handleFileSelect}
         style={{ display: "none" }}
         accept={isPdf ? ".pdf" : "audio/*"}
-        multiple
+        multiple={!isPdf}
       />
       <svg
         className="UploadIcon"

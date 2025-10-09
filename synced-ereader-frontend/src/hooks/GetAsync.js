@@ -2,11 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 
 /**
- * Fetches data from API.
+ * React hook: fetches data from an API endpoint.
  * @param {string} initialUrl - The API endpoint URL
  * @returns {Object} Object containing data, loading state, error state, and fetch function
  */
-export default function getAsync(initialUrl = "") {
+export default function useGetAsync(initialUrl = "") {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);

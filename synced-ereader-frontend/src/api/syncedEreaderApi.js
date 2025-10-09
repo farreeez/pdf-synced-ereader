@@ -1,10 +1,10 @@
-import createAsync from "./../../../pdf.js-fork/web/pdf-syncing-components/hooks/CreateAsync";
-import getAsync from "./../../../pdf.js-fork/web/pdf-syncing-components/hooks/GetAsync";
+import useCreateAsync from "./../hooks/CreateAsync";
+import useGetAsync from "./../hooks/GetAsync";
 
 const API_BASE_URL = import.meta.env.REACT_APP_API_URL;
 
-export function createBookProjectAsync() {
-  const { isLoading, post, isError } = createAsync();
+export function useCreateBookProject() {
+  const { isLoading, post, isError } = useCreateAsync();
 
   async function createBookProject(bookName) {
     return await post(`${API_BASE_URL}/create-project/${bookName}`);
@@ -13,8 +13,8 @@ export function createBookProjectAsync() {
   return { createBookProject, isLoading, isError };
 }
 
-export function getProjectNamesAsync() {
-  const { isLoading, fetch, isError } = getAsync();
+export function useGetProjectNames() {
+  const { isLoading, fetch, isError } = useGetAsync();
 
   async function getProjectNames() {
     return await fetch(`${API_BASE_URL}/project-names`);
@@ -23,21 +23,20 @@ export function getProjectNamesAsync() {
   return { getProjectNames, isLoading, isError };
 }
 
-export function transcribeAudioBookAsync() {
-  const { isLoading, isError, post } = createAsync();
+export function useTranscribeAudioBook() {
+  const { isLoading, isError, post } = useCreateAsync();
 
-  async function transcribeAudioBook(bookName, audioFiles) {
-    return await post(
-      `${API_BASE_URL}/transcribe-audiobook/${bookName}`,
-      audioFiles
-    );
+  async function transcribeAudioBook(bookName, audioFilePaths) {
+    return await post(`${API_BASE_URL}/transcribe-audiobook/${bookName}`, {
+      paths: audioFilePaths,
+    });
   }
 
   return { transcribeAudioBook, isError, isLoading };
 }
 
-export function coarselyAlignTranscriptToPdfAsync() {
-  const { isLoading, isError, post } = createAsync();
+export function useCoarselyAlignTranscriptToPdf() {
+  const { isLoading, isError, post } = useCreateAsync();
 
   async function coarselyAlignTranscriptToPdf(bookName, pdfPagesArray) {
     return await post(`${API_BASE_URL}/coarse-alignment/${bookName}`, {

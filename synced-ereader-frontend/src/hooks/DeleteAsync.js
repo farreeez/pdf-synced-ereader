@@ -6,7 +6,7 @@ import { useState } from "react";
  * @param {string} initialUrl - The API endpoint URL
  * @returns {Object} Object containing data, loading state, error state, and remove function
  */
-export default function deleteAsync(initialUrl = "") {
+export default function useDeleteAsync(initialUrl = "") {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(false);
   const [isError, setError] = useState(false);
